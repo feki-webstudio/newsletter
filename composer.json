@@ -1,0 +1,22 @@
+{
+  "name": "fekiwebstudio/newsletter",
+  "description": "Simple, generic Newsletter library, mainly for Laravel 5+.",
+  "authors": [
+    {
+      "name": "Zsolt",
+      "email": "fekete.zsolt@fekiwebstudio.hu",
+      "role": "Developer"
+    }
+  ],
+  "minimum-stability": "stable",
+  "require": {
+    "php": ">=5.6.0",
+    "intervention/image": "^2.3",
+    "illuminate/support": "5.*"
+  },
+  "autoload": {
+    "psr-4": {
+      "FekiWebstudio\\Newsletter\\": "src/FekiWebstudio/Newsletter"
+    }
+  }
+}

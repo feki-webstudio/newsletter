@@ -23,7 +23,7 @@ interface SubscriberListRepositoryContract
      * @return SubscriberListContract
      */
     public function getSubscriberList($identifier);
-
+    
     /**
      * Gets all subscriber lists with optional limits.
      *

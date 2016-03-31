@@ -16,6 +16,13 @@ namespace FekiWebstudio\Newsletter\Contracts;
 interface SubscriberListContract
 {
     /**
+     * Gets the title of the subscriber list.
+     *
+     * @return string
+     */
+    public function getTitle();
+
+    /**
      * Subscribes a user to the subscriber list.
      *
      * @param SubscriberContract $subscriber

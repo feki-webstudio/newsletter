@@ -9,10 +9,31 @@ namespace FekiWebstudio\Newsletter\LocalNewsletterDriver;
 
 use FekiWebstudio\Newsletter\Contracts\SubscriberContract;
 use FekiWebstudio\Newsletter\Contracts\SubscriberListContract;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 
 class SubscriberList extends Model implements SubscriberListContract
 {
+    /**
+     * Gets the title of the subscriber list.
+     *
+     * @return string
+     */
+    public function getTitle()
+    {
+        return $this->getAttributeValue(static::getTitleAttributeName());
+    }
+
+    /**
+     * Gets the name of the title attribute.
+     *
+     * @return string
+     */
+    protected static function getTitleAttributeName()
+    {
+        return 'title';
+    }
+
     /**
      * Gets the subscriber relationship.
      *
@@ -68,5 +89,17 @@ class SubscriberList extends Model implements SubscriberListContract
         }
 
         return $subscribers->get();
+    }
+
+    /**
+     * Scopes the title to subscriber lists having a specified title.
+     *
+     * @param Builder $query
+     * @param string $title
+     * @return Builder
+     */
+    public function scopeWhereTitle($query, $title)
+    {
+        return $query->where(static::getTitleAttributeName(), '=', $title);
     }
 }

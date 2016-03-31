@@ -1,2 +1,2 @@
 # Newsletter
-Simple, generic Newsletter library, mainly for Laravel 5+.
+Simple, generic Newsletter library for Laravel 5+.

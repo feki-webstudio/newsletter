@@ -7,10 +7,11 @@
 
 namespace FekiWebstudio\Newsletter\LocalNewsletterDriver;
 
-use Mail;
 use FekiWebstudio\Newsletter\Contracts\SubscriberContract;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Query\Builder;
+use Mail;
+use Uuid;
 
 class Subscriber extends Model implements SubscriberContract
 {
@@ -19,7 +20,7 @@ class Subscriber extends Model implements SubscriberContract
      *
      * @var array
      */
-    protected $guarded = [ '_token', '_method' ];
+    protected $guarded = ['_token', '_method'];
 
     /**
      * Gets the e-mail address of the subscriber.
@@ -77,10 +78,31 @@ class Subscriber extends Model implements SubscriberContract
     }
 
     /**
+     * Scopes the query to subscribers having a specified unique id.
+     *
+     * @param Builder $query
+     * @param string $uniqueId
+     * @return Builder
+     */
+    public function scopeWhereUniqueId($query, $uniqueId)
+    {
+        return $query->where(
+            static::getUniqueIdAttributeName(),
+            '=',
+            $uniqueId
+        );
+    }
+
+    /**
      * Sends the activation e-mail to the subscriber.
      */
     public function sendActivationEmail()
     {
+        // Set unique id
+        $this->setRandomUniqueId();
+        $this->save();
+
+        // Send email
         Mail::send(
             'newsletter::emails.activation',
             ['subscriber' => $this],
@@ -99,7 +121,7 @@ class Subscriber extends Model implements SubscriberContract
     public function getActivationLink()
     {
         return route(
-            'newsletter.activate',
+            'newsletter.activate-subscription',
             ['id' => $this->getAttributeValue($this->getUniqueIdAttributeName())]
         );
     }

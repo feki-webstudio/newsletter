@@ -56,7 +56,17 @@ class SubscriberList extends Model implements SubscriberListContract
         $subscriberProperties = ['email' => $email];
         $subscriberProperties = array_merge($subscriberProperties, $fields);
 
-        return $this->subscribers()->create($subscriberProperties);
+        // Check if subscriber already subscribed
+        $subscriber = $this->subscribers()->where('email', '=', $email)->first();
+        if (! is_null($subscriber)) {
+            return $subscriber;
+        }
+
+        // Create subscriber
+        $subscriber = $this->subscribers()->create($subscriberProperties);
+
+        // Send activation mail
+        $subscriber->sendActivationEmail();
     }
 
     /**

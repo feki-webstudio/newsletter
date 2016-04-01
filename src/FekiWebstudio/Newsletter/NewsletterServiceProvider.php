@@ -13,7 +13,7 @@ class NewsletterServiceProvider extends ServiceProvider
     public function boot()
     {
         // Load vendor views
-        $this->loadViewsFrom(__DIR__ . '/../../../resources/views/emails', 'newsletter');
+        $this->loadViewsFrom(__DIR__ . '/../../../resources/views', 'newsletter');
         
         // Publish config
         $this->publishes([

@@ -7,6 +7,7 @@
 
 namespace FekiWebstudio\Newsletter\LocalNewsletterDriver;
 
+use Mail;
 use FekiWebstudio\Newsletter\Contracts\SubscriberContract;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Query\Builder;
@@ -14,14 +15,11 @@ use Illuminate\Database\Query\Builder;
 class Subscriber extends Model implements SubscriberContract
 {
     /**
-     * Gets the subscriber list relationship.
+     * Attributes that are not mass-assignable.
      *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     * @var array
      */
-    protected function subscriberList()
-    {
-        return $this->belongsTo(SubscriberList::class);
-    }
+    protected $guarded = [ '_token', '_method' ];
 
     /**
      * Gets the e-mail address of the subscriber.
@@ -79,6 +77,44 @@ class Subscriber extends Model implements SubscriberContract
     }
 
     /**
+     * Sends the activation e-mail to the subscriber.
+     */
+    public function sendActivationEmail()
+    {
+        Mail::send(
+            'newsletter::emails.activation',
+            ['subscriber' => $this],
+            function ($message) {
+                $message->to($this->getEmail());
+                $message->subject('Hírlevél feliratkozás megerősítése');
+            }
+        );
+    }
+
+    /**
+     * Gets the link to the activation of the subscription.
+     *
+     * @return string
+     */
+    public function getActivationLink()
+    {
+        return route(
+            'newsletter.activate',
+            ['id' => $this->getAttributeValue($this->getUniqueIdAttributeName())]
+        );
+    }
+
+    /**
+     * Gets the name of the route used to activate a newsletter subscription.
+     *
+     * @return string
+     */
+    protected function getActivationRouteName()
+    {
+        return 'newsletter.activate';
+    }
+
+    /**
      * Gets the name of the email attribute.
      *
      * @return string
@@ -86,26 +122,6 @@ class Subscriber extends Model implements SubscriberContract
     protected function getEmailAttributeName()
     {
         return 'email';
-    }
-
-    /**
-     * Gets the name of the unique_id attribute.
-     *
-     * @return string
-     */
-    protected static function getUniqueIdAttributeName()
-    {
-        return 'unique_id';
-    }
-
-    /**
-     * Gets the name of the is_active attribute.
-     *
-     * @return string
-     */
-    protected static function getIsActiveAttributeName()
-    {
-        return 'is_active';
     }
 
     /**
@@ -124,6 +140,16 @@ class Subscriber extends Model implements SubscriberContract
     protected function getRandomId()
     {
         return Uuid::generate(4);
+    }
+
+    /**
+     * Gets the subscriber list relationship.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    protected function subscriberList()
+    {
+        return $this->belongsTo(SubscriberList::class);
     }
 
     /**
@@ -150,5 +176,25 @@ class Subscriber extends Model implements SubscriberContract
         $user->save();
 
         return $user;
+    }
+
+    /**
+     * Gets the name of the unique_id attribute.
+     *
+     * @return string
+     */
+    protected static function getUniqueIdAttributeName()
+    {
+        return 'unique_id';
+    }
+
+    /**
+     * Gets the name of the is_active attribute.
+     *
+     * @return string
+     */
+    protected static function getIsActiveAttributeName()
+    {
+        return 'is_active';
     }
 }

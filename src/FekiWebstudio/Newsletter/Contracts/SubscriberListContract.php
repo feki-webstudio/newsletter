@@ -25,10 +25,11 @@ interface SubscriberListContract
     /**
      * Subscribes a user to the subscriber list.
      *
-     * @param SubscriberContract $subscriber
-     * @param bool
+     * @param string $email
+     * @param array $fields
+     * @return SubscriberContract
      */
-    public function subscribe(SubscriberContract $subscriber);
+    public function subscribe($email, $fields = []);
 
     /**
      * Unsubscribes a user from the subscriber list.

@@ -13,9 +13,9 @@ class NewsletterServiceProvider extends ServiceProvider
     public function boot()
     {
         // Load vendor views
-        $this->loadViewsFrom(__DIR__ . '/../../../resources/views/emails', 'feki-newsletter');
-
-        // Load config
+        $this->loadViewsFrom(__DIR__ . '/../../../resources/views/emails', 'newsletter');
+        
+        // Publish config
         $this->publishes([
             __DIR__ . '/../../../config/newsletter.php' => config_path('newsletter.php'),
         ]);
@@ -30,7 +30,8 @@ class NewsletterServiceProvider extends ServiceProvider
     {
         // Merge default config file
         $this->mergeConfigFrom(
-            __DIR__  . '/../../../resources/config/newsletter.php', 'newsletter'
+            __DIR__  . '/../../../resources/config/newsletter.php',
+            'newsletter'
         );
     }
 }

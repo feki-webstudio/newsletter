@@ -47,12 +47,16 @@ class SubscriberList extends Model implements SubscriberListContract
     /**
      * Subscribes a user to the subscriber list.
      *
-     * @param SubscriberContract $subscriber
-     * @param bool
+     * @param string $email
+     * @param array $fields
+     * @return SubscriberContract
      */
-    public function subscribe(SubscriberContract $subscriber)
+    public function subscribe($email, $fields = [])
     {
-        $this->subscribers()->create($subscriber);
+        $subscriberProperties = ['email' => $email];
+        $subscriberProperties = array_merge($subscriberProperties, $fields);
+
+        return $this->subscribers()->create($subscriberProperties);
     }
 
     /**

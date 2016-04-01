@@ -106,7 +106,7 @@ class Campaign extends Model implements CampaignContract
             $customContent = $this->mapFieldsToValues($content, $subscriber);
 
             // Send the mail
-            Mail::send('feki-newsletter::emails.newsletter', [
+            Mail::send('newsletter::emails.newsletter', [
                 'content' => $customContent,
                 'subscriber' => $subscriber,
             ], function ($message) use ($subscriber) {

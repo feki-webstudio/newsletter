@@ -15,9 +15,15 @@ class NewsletterServiceProvider extends ServiceProvider
         // Load vendor views
         $this->loadViewsFrom(__DIR__ . '/../../../resources/views', 'newsletter');
         
-        // Publish config
+        // Publish config and views
         $this->publishes([
             __DIR__ . '/../../../config/newsletter.php' => config_path('newsletter.php'),
+            'newsletter'
+        ]);
+
+        $this->publishes([
+            __DIR__ . '/../../../resources/views' => base_path('resources/views/vendor/newsletter'),
+            'newsletter'
         ]);
     }
 

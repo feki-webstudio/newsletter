@@ -96,7 +96,7 @@ class Subscriber extends Model implements SubscriberContract
     /**
      * Sends the activation e-mail to the subscriber.
      */
-    public function sendActivationEmail()
+    public function sendConfirmationMail()
     {
         // Set unique id
         $this->setRandomUniqueId();
@@ -104,7 +104,7 @@ class Subscriber extends Model implements SubscriberContract
 
         // Send email
         Mail::send(
-            'newsletter::emails.activation',
+            'newsletter::emails.confirmation',
             ['subscriber' => $this],
             function ($message) {
                 $message->to($this->getEmail());
@@ -118,10 +118,10 @@ class Subscriber extends Model implements SubscriberContract
      *
      * @return string
      */
-    public function getActivationLink()
+    public function getConfirmationLink()
     {
         return route(
-            'newsletter.activate-subscription',
+            'newsletter.confirmation',
             ['id' => $this->getAttributeValue($this->getUniqueIdAttributeName())]
         );
     }

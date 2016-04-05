@@ -25,6 +25,13 @@ class Campaign extends Model implements CampaignContract
     protected $fillable = ['subject'];
 
     /**
+     * Attributes used as dates.
+     *
+     * @var array
+     */
+    protected $dates = ['send_at', 'sent_at'];
+
+    /**
      * Gets the identifier of the campaign.
      *
      * @return mixed

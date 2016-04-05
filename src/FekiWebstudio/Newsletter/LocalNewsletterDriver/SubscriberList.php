@@ -45,6 +45,16 @@ class SubscriberList extends Model implements SubscriberListContract
     }
 
     /**
+     * Gets the number of the subscribers of the list.
+     *
+     * @return int
+     */
+    public function getSubscribersCount()
+    {
+        return $this->subscribers->count('id');
+    }
+
+    /**
      * Subscribes a user to the subscriber list.
      *
      * @param string $email

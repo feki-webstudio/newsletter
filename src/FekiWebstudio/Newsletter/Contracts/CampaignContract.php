@@ -96,5 +96,5 @@ interface CampaignContract
      *
      * @return int
      */
-    public function numberOfRecipients();
+    public function getRecipientsCount();
 }

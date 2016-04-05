@@ -17,7 +17,7 @@ interface SubscriberListContract
 {
     /**
      * Gets the identifier (primary key) of the subscriber list.
-     * 
+     *
      * @return mixed
      */
     public function getIdentifier();
@@ -54,4 +54,11 @@ interface SubscriberListContract
      * @return SubscriberContract[]
      */
     public function getSubscribers($offset = 0, $limit = 0);
+    
+    /**
+     * Gets the number of subscribers of the list.
+     *
+     * @return int
+     */
+    public function getSubscribersCount();
 }

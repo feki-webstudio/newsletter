@@ -276,7 +276,7 @@ class Campaign extends Model implements CampaignContract
      *
      * @return int
      */
-    public function numberOfRecipients()
+    public function getRecipientsCount()
     {
         return $this->getAttributeValue($this->getNumberOfRecipientsAttributeName());
     }

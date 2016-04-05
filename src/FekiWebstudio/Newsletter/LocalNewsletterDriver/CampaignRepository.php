@@ -63,15 +63,13 @@ class CampaignRepository implements CampaignRepositoryContract
      */
     public function getCampaigns($offset = 0, $limit = 0)
     {
-        $campaigns = $this->callStaticMethod($this->campaignType, 'orderBy', ['sent_at', 'desc'], true);
-        
+        $campaigns = $this->callStaticMethod($this->campaignType, 'orderBy', ['created_at', 'desc'], true);
+
         if ($limit > 0) {
             $campaigns = $campaigns->offset($offset)->take($limit);
         }
 
-        return $campaigns
-            ->orderBy('created_at', 'desc')
-            ->get();
+        return $campaigns->get();
     }
     
     /**

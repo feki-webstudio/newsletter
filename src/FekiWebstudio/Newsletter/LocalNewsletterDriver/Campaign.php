@@ -270,7 +270,8 @@ class Campaign extends Model implements CampaignContract
      */
     public function getRecipients()
     {
-        throw new \BadMethodCallException('Basic implementation of the LocalNewsletterDriver does not implement getRecipients() method. Make sure to override it.');
+        throw new \BadMethodCallException('Basic implementation of the LocalNewsletterDriver does not implement 
+            getRecipients() method. Make sure to override it.');
     }
 
     /**

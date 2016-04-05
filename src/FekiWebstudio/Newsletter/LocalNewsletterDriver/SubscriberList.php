@@ -51,7 +51,7 @@ class SubscriberList extends Model implements SubscriberListContract
      */
     public function getSubscribersCount()
     {
-        return $this->subscribers->count('id');
+        return $this->subscribers()->active()->count('id');
     }
 
     /**

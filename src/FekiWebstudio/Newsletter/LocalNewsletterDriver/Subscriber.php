@@ -140,11 +140,11 @@ class Subscriber extends Model implements SubscriberContract
     }
 
     /**
-     * Gets the name of the route used to activate a newsletter subscription.
+     * Gets the name of the route used to confirm a newsletter subscription.
      *
      * @return string
      */
-    protected function getActivationRouteName()
+    protected function getConfirmationRouteName()
     {
         return 'newsletter.activate';
     }
@@ -197,20 +197,20 @@ class Subscriber extends Model implements SubscriberContract
      */
     public static function findAndConfirm($uniqueId)
     {
-        $user = User::where(static::getUniqueIdAttributeName(), '=', $uniqueId)
+        $subscriber = self::where(static::getUniqueIdAttributeName(), '=', $uniqueId)
             ->where(static::getIsActiveAttributeName(), '=', false)
             ->first();
 
-        if (! $user) {
+        if (! $subscriber) {
             // Not found
             return false;
         }
 
         // Activate
-        $user->is_confirmed = true;
-        $user->save();
+        $subscriber->is_confirmed = true;
+        $subscriber->save();
 
-        return $user;
+        return $subscriber;
     }
 
     /**
@@ -221,16 +221,16 @@ class Subscriber extends Model implements SubscriberContract
      */
     public static function findAndCancel($uniqueId)
     {
-        $user = User::where(static::getUniqueIdAttributeName(), '=', $uniqueId)
+        $subscriber = self::where(static::getUniqueIdAttributeName(), '=', $uniqueId)
             ->where(static::getIsActiveAttributeName(), '=', true)
             ->first();
 
-        if (! $user) {
+        if (! $subscriber) {
             // Not found
             return false;
         }
 
-        $user->delete();
+        $subscriber->delete();
         return true;
     }
 
@@ -251,6 +251,6 @@ class Subscriber extends Model implements SubscriberContract
      */
     protected static function getIsActiveAttributeName()
     {
-        return 'is_active';
+        return 'is_confirmed';
     }
 }

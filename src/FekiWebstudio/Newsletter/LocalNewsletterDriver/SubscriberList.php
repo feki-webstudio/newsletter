@@ -76,7 +76,7 @@ class SubscriberList extends Model implements SubscriberListContract
         $subscriber = $this->subscribers()->create($subscriberProperties);
 
         // Send activation mail
-        $subscriber->sendActivationEmail();
+        $subscriber->sendConfirmationMail();
     }
 
     /**

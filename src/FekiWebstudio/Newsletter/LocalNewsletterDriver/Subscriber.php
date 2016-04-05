@@ -121,7 +121,20 @@ class Subscriber extends Model implements SubscriberContract
     public function getConfirmationLink()
     {
         return route(
-            'newsletter.confirmation',
+            config('newsletter.local-driver.confirmation-route'),
+            ['id' => $this->getAttributeValue($this->getUniqueIdAttributeName())]
+        );
+    }
+
+    /**
+     * Gets te link to the cancellation of the subscription.
+     *
+     * @return string
+     */
+    public function getCancellationLink()
+    {
+        return route(
+            config('newsletter.local-driver.cancellation-route'),
             ['id' => $this->getAttributeValue($this->getUniqueIdAttributeName())]
         );
     }
@@ -182,22 +195,43 @@ class Subscriber extends Model implements SubscriberContract
      * @param string $uniqueId
      * @return Subscriber|false
      */
-    public static function findAndActivate($uniqueId)
+    public static function findAndConfirm($uniqueId)
     {
         $user = User::where(static::getUniqueIdAttributeName(), '=', $uniqueId)
             ->where(static::getIsActiveAttributeName(), '=', false)
             ->first();
 
-        if (is_null($user)) {
+        if (! $user) {
             // Not found
             return false;
         }
 
         // Activate
-        $user->is_active = true;
+        $user->is_confirmed = true;
         $user->save();
 
         return $user;
+    }
+
+    /**
+     * Finds the subscriber using the unique random ID and unsubscribes it.
+     *
+     * @param string $uniqueId
+     * @return bool
+     */
+    public static function findAndCancel($uniqueId)
+    {
+        $user = User::where(static::getUniqueIdAttributeName(), '=', $uniqueId)
+            ->where(static::getIsActiveAttributeName(), '=', true)
+            ->first();
+
+        if (! $user) {
+            // Not found
+            return false;
+        }
+
+        $user->delete();
+        return true;
     }
 
     /**

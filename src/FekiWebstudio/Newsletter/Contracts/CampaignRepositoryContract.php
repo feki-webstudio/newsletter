@@ -33,6 +33,20 @@ interface CampaignRepositoryContract
     public function getCampaigns($offset = 0, $limit = 0);
 
     /**
+     * Gets the number of all campaigns.
+     *
+     * @return int
+     */
+    public function getCampaignsCount();
+
+    /**
+     * Constructs a new campaign object without saving it.
+     *
+     * @return CampaignContract
+     */
+    public function constructCampaignObject();
+
+    /**
      * Creates a new campaign.
      *
      * @param string $subject

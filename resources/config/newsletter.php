@@ -6,4 +6,9 @@
  */
 
 return [
+    'local-driver' => [
+        'subscriber-type' => FekiWebstudio\Newsletter\LocalNewsletterDriver\Subscriber::class,
+        'subscriber-list-type' => FekiWebstudio\Newsletter\LocalNewsletterDriver\SubscriberList::class,
+        'campaign-type' => FekiWebstudio\Newsletter\LocalNewsletterDriver\Campaign::class
+    ]
 ];

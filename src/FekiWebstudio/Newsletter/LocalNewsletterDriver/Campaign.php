@@ -17,6 +17,23 @@ use Mail;
 class Campaign extends Model implements CampaignContract
 {
     /**
+     * Attributes that are mass assignable.
+     *
+     * @var array
+     */
+    protected $fillable = ['subject'];
+    
+    /**
+     * Gets the identifier of the campaign.
+     *
+     * @return mixed
+     */
+    public function getIdentifier()
+    {
+        return $this->getKey();
+    }
+
+    /**
      * Sets the subject of the campaign.
      *
      * @param string $subject

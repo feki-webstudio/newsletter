@@ -17,11 +17,13 @@ class NewsletterServiceProvider extends ServiceProvider
         
         // Publish config and views
         $this->publishes([
-            __DIR__ . '/../../../resources/config/newsletter.php' => config_path('newsletter.php')
+            __DIR__ . '/../../../resources/config/newsletter.php' => config_path('newsletter.php'),
+            'newsletter'
         ]);
 
         $this->publishes([
-            __DIR__ . '/../../../resources/views' => base_path('resources/views/vendor/newsletter')
+            __DIR__ . '/../../../resources/views' => base_path('resources/views/vendor/newsletter'),
+            'newsletter'
         ]);
     }
 

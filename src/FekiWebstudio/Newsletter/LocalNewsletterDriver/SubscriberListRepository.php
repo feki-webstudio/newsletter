@@ -14,6 +14,29 @@ use FekiWebstudio\Newsletter\Contracts\SubscriberListRepositoryContract;
 class SubscriberListRepository implements SubscriberListRepositoryContract
 {
     /**
+     * Type of the subscriber list object.
+     *
+     * @var string
+     */
+    protected $subscriberListType;
+
+    /**
+     * Type of the subscriber object.
+     *
+     * @var string
+     */
+    protected $subscriberType;
+
+    /**
+     * SubscriberListRepository constructor.
+     */
+    public function __construct()
+    {
+        $this->subscriberType = config('newsletter.local-driver.subscriber-type');
+        $this->subscriberListType = config('newsletter.local-driver.subscriber-list-type');
+    }
+
+    /**
      * Gets all subscriber lists with optional limits.
      *
      * @param int $offset
@@ -22,7 +45,7 @@ class SubscriberListRepository implements SubscriberListRepositoryContract
      */
     public function getSubscriberLists($offset = 0, $limit = 0)
     {
-        $subscribers = Subscriber::skip($offset);
+        $subscribers = $this->callStaticMethod($this->subscriberListType, 'skip', $offset);
 
         if ($limit > 0) {
             $subscribers = $subscribers->take($limit);
@@ -39,6 +62,19 @@ class SubscriberListRepository implements SubscriberListRepositoryContract
      */
     public function getSubscriberList($identifier)
     {
-        return SubscriberList::find($identifier);
+        return $this->callStaticMethod($this->subscriberListType, 'find', $identifier);
+    }
+
+    /**
+     * Calls a static method of an object with the given type.
+     *
+     * @param string $type
+     * @param string $method
+     * @param mixed $params
+     * @return mixed
+     */
+    protected function callStaticMethod($type, $method, $params = null)
+    {
+        return call_user_func($type . "::" . $method, $params);
     }
 }

@@ -18,6 +18,13 @@ use \DateTime;
 interface CampaignContract
 {
     /**
+     * Gets the identifier of the contract.
+     *
+     * @return mixed
+     */
+    public function getIdentifier();
+
+    /**
      * Gets the subject of the campaign.
      *
      * @return string

@@ -13,6 +13,37 @@ use FekiWebstudio\Newsletter\Contracts\CampaignRepositoryContract;
 class CampaignRepository implements CampaignRepositoryContract
 {
     /**
+     * Type of the subscriber list object.
+     *
+     * @var string
+     */
+    protected $subscriberListType;
+
+    /**
+     * Type of the subscriber object.
+     *
+     * @var string
+     */
+    protected $subscriberType;
+
+    /**
+     * Type of the campaign object.
+     *
+     * @var string
+     */
+    protected $campaignType;
+
+    /**
+     * CampaignRepositoryContract constructor.
+     */
+    public function __construct()
+    {
+        $this->subscriberType = config('newsletter.local-driver.subscriber-type');
+        $this->campaignType = config('newsletter.local-driver.campaign-type');
+        $this->subscriberListType = config('newsletter.local-driver.subscriber-list-type');
+    }
+
+    /**
      * Gets a campaign identified by the provided identifier.
      *
      * @param mixed $identifier
@@ -20,7 +51,7 @@ class CampaignRepository implements CampaignRepositoryContract
      */
     public function getCampaign($identifier)
     {
-        return Campaign::find($identifier);
+        return $this->callStaticMethod($this->campaignType, 'find', $identifier);
     }
     
     /**
@@ -32,15 +63,18 @@ class CampaignRepository implements CampaignRepositoryContract
      */
     public function getCampaigns($offset = 0, $limit = 0)
     {
-        $campaigns = Campaign::skip($offset);
+        $campaigns = $this->callStaticMethod($this->campaignType, 'skip', $offset);
 
         if ($limit > 0) {
             $campaigns = $campaigns->take($limit);
         }
 
-        return $campaigns->get();
+        return $campaigns
+            ->orderBy('sent_at', 'desc')
+            ->orderBy('created_at', 'desc')
+            ->get();
     }
-
+    
     /**
      * Creates a new campaign.
      *
@@ -49,7 +83,7 @@ class CampaignRepository implements CampaignRepositoryContract
      */
     public function createCampaign($subject)
     {
-        return Campaign::create([
+        return $this->callStaticMethod($this->campaignType, 'create', [
             'subject' => $subject
         ]);
     }
@@ -88,8 +122,46 @@ class CampaignRepository implements CampaignRepositoryContract
      */
     protected function checkCampaignType($campaign)
     {
-        if (! $campaign instanceof Campaign) {
-            throw new \InvalidArgumentException("The campaign repository of the local newsletter driver only allows instances of the Campaign class");
+        $campaignType = $this->campaignType;
+
+        if (! $campaign instanceof $campaignType) {
+            throw new \InvalidArgumentException("The campaign repository of the local newsletter driver only allows 
+                instances of the Campaign class");
         }
+    }
+
+    /**
+     * Constructs a new campaign object without saving it.
+     *
+     * @return CampaignContract
+     */
+    public function constructCampaignObject()
+    {
+        $campaignType = $this->campaignType;
+
+        return new $campaignType();
+    }
+
+    /**
+     * Gets the number of all campaigns.
+     *
+     * @return int
+     */
+    public function getCampaignsCount()
+    {
+        return $this->callStaticMethod($this->campaignType, 'count', 'id');
+    }
+
+    /**
+     * Calls a static method of an object with the given type.
+     *
+     * @param string $type
+     * @param string $method
+     * @param mixed $params
+     * @return mixed
+     */
+    protected function callStaticMethod($type, $method, $params = null)
+    {
+        return call_user_func($type . "::" . $method, $params);
     }
 }

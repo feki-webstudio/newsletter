@@ -63,14 +63,13 @@ class CampaignRepository implements CampaignRepositoryContract
      */
     public function getCampaigns($offset = 0, $limit = 0)
     {
-        $campaigns = $this->callStaticMethod($this->campaignType, 'skip', $offset);
-
+        $campaigns = $this->callStaticMethod($this->campaignType, 'orderBy', ['sent_at', 'desc'], true);
+        
         if ($limit > 0) {
-            $campaigns = $campaigns->take($limit);
+            $campaigns = $campaigns->offset($offset)->take($limit);
         }
 
         return $campaigns
-            ->orderBy('sent_at', 'desc')
             ->orderBy('created_at', 'desc')
             ->get();
     }
@@ -158,10 +157,15 @@ class CampaignRepository implements CampaignRepositoryContract
      * @param string $type
      * @param string $method
      * @param mixed $params
+     * @param bool $multiParam
      * @return mixed
      */
-    protected function callStaticMethod($type, $method, $params = null)
+    protected function callStaticMethod($type, $method, $params = null, $multiParam = false)
     {
-        return call_user_func($type . "::" . $method, $params);
+        if ($multiParam) {
+            return call_user_func_array($type . "::" . $method, $params);
+        } else {
+            return call_user_func($type . "::" . $method, $params);
+        }
     }
 }

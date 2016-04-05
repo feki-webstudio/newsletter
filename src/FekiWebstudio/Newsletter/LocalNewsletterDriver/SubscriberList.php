@@ -96,10 +96,10 @@ class SubscriberList extends Model implements SubscriberListContract
      */
     public function getSubscribers($offset = 0, $limit = 0)
     {
-        $subscribers = $this->subscribers()->skip($offset);
+        $subscribers = $this->subscribers();
 
         if ($limit > 0) {
-            $subscribers = $subscribers->take($limit);
+            $subscribers = $subscribers->skip($offset)->take($limit);
         }
 
         return $subscribers->get();
@@ -115,5 +115,15 @@ class SubscriberList extends Model implements SubscriberListContract
     public function scopeWhereTitle($query, $title)
     {
         return $query->where(static::getTitleAttributeName(), '=', $title);
+    }
+
+    /**
+     * Gets the identifier (primary key) of the subscriber list.
+     *
+     * @return mixed
+     */
+    public function getIdentifier()
+    {
+        return $this->getKey();
     }
 }

@@ -45,12 +45,12 @@ class SubscriberListRepository implements SubscriberListRepositoryContract
      */
     public function getSubscriberLists($offset = 0, $limit = 0)
     {
-        $subscribers = $this->callStaticMethod($this->subscriberListType, 'skip', $offset);
-
-        if ($limit > 0) {
-            $subscribers = $subscribers->take($limit);
+        if (! $limit) {
+            return $this->callStaticMethod($this->subscriberListType, 'get');
         }
 
+        $subscribers = $this->callStaticMethod($this->subscriberListType, 'skip', $offset);
+        $subscribers = $subscribers->take($limit);
         return $subscribers->get();
     }
 

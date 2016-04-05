@@ -16,6 +16,13 @@ namespace FekiWebstudio\Newsletter\Contracts;
 interface SubscriberListContract
 {
     /**
+     * Gets the identifier (primary key) of the subscriber list.
+     * 
+     * @return mixed
+     */
+    public function getIdentifier();
+
+    /**
      * Gets the title of the subscriber list.
      *
      * @return string

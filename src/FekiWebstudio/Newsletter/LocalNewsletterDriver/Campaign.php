@@ -8,6 +8,7 @@
 namespace FekiWebstudio\Newsletter\LocalNewsletterDriver;
 
 use DateTime;
+use FekiWebstudio\Newsletter\CampaignStatus;
 use FekiWebstudio\Newsletter\Contracts\CampaignContract;
 use FekiWebstudio\Newsletter\Contracts\SubscriberContract;
 use FekiWebstudio\Newsletter\Contracts\SubscriberListContract;
@@ -22,7 +23,7 @@ class Campaign extends Model implements CampaignContract
      * @var array
      */
     protected $fillable = ['subject'];
-    
+
     /**
      * Gets the identifier of the campaign.
      *
@@ -118,7 +119,7 @@ class Campaign extends Model implements CampaignContract
         $numberOfRecipients = 0;
 
         // Simply run a foreach and send to all recipients one by one
-        foreach ($subscriberList->getSubscribers(0, 99999) as $subscriber) {
+        foreach ($subscriberList->getSubscribers(0, 0) as $subscriber) {
             // Customize the content for the user (map attributes to values)
             $customContent = $this->mapFieldsToValues($content, $subscriber);
 
@@ -135,6 +136,7 @@ class Campaign extends Model implements CampaignContract
         }
 
         $this->setSentAt(new DateTime());
+        $this->setStatus(CampaignStatus::SENT);
         $this->setNumberOfRecipients($numberOfRecipients);
         $this->save();
     }
@@ -289,5 +291,25 @@ class Campaign extends Model implements CampaignContract
     public function subscriberList()
     {
         return $this->belongsTo(SubscriberList::class);
+    }
+
+    /**
+     * Gets the status of the campaign.
+     *
+     * @return int
+     */
+    public function getStatus()
+    {
+        return $this->getAttributeValue('status');
+    }
+
+    /**
+     * Sets the status of the campaign.
+     *
+     * @param int $status
+     */
+    public function setStatus($status)
+    {
+        $this->setAttribute('status', $status);
     }
 }

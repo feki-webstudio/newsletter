@@ -92,6 +92,14 @@ interface CampaignContract
     public function getRecipients();
 
     /**
+     * Gets the status of the campaign. Possible statuses are
+     * enumerated in the CampaignStatus class.
+     *
+     * @return int
+     */
+    public function getStatus();
+
+    /**
      * Gets the number of the recipients.
      *
      * @return int

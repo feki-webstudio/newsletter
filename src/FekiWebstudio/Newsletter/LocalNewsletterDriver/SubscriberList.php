@@ -112,7 +112,7 @@ class SubscriberList extends Model implements SubscriberListContract
             $subscribers = $subscribers->skip($offset)->take($limit);
         }
 
-        return $subscribers->get();
+        return $subscribers->active()->get();
     }
 
     /**

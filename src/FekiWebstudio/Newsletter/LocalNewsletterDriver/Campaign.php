@@ -181,7 +181,7 @@ class Campaign extends Model implements CampaignContract
         // Replace all tags
         foreach ($fields['tag'] as $field) {
             $tagMask = $this->getFieldMask($field);
-            $content = str_replace($tagMask, $subscriber->getField($field), $content);
+            $content = str_replace($tagMask, $subscriber->getField(strtolower($field)), $content);
         }
 
         return $content;

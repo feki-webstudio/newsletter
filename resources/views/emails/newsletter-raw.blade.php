@@ -1,3 +1,3 @@
-{{ strip_tags(preg_replace('#<br\s*/?>#i', "\n", $content)) }}
+{!! strip_tags(preg_replace('#<br\s*/?>#i', "\n", $content)) !!}
 
-Leiratkozás: {{ $subscriber->getCancellationLink() }}
+Leiratkozás: {!! $subscriber->getCancellationLink() !!}

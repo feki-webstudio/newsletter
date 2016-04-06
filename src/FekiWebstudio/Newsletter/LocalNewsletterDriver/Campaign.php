@@ -131,13 +131,17 @@ class Campaign extends Model implements CampaignContract
             $customContent = $this->mapFieldsToValues($content, $subscriber);
 
             // Send the mail
-            Mail::send('newsletter::emails.newsletter', [
-                'content' => $customContent,
-                'subscriber' => $subscriber,
-            ], function ($message) use ($subscriber) {
-                $message->to($subscriber->getEmail());
-                $message->subject($this->getSubject());
-            });
+            Mail::send(
+                [ 'newsletter::emails.newsletter', 'newsletter::emails.newsletter-raw' ],
+                [
+                    'content' => $customContent,
+                    'subscriber' => $subscriber,
+                ],
+                function ($message) use ($subscriber) {
+                    $message->to($subscriber->getEmail());
+                    $message->subject($this->getSubject());
+                }
+            );
 
             $numberOfRecipients++;
         }
